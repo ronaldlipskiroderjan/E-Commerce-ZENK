@@ -40,12 +40,16 @@ public class UsuarioEntity implements UserDetails {
     @Column(name = "data_cadastro", nullable = false)
     private LocalDateTime dataCadastro;
 
+    @Column(nullable = false)
+    private boolean activate;
+
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<EnderecoEntity> enderecos = new HashSet<>();
 
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "usuario_roles",
-            joinColumns = @JoinColumn(name = "usario_id"),
+            joinColumns = @JoinColumn(name = "usuario_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<RoleEntity> roles = new HashSet<>();

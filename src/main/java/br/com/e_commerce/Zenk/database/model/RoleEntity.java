@@ -5,6 +5,9 @@ import lombok.*;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "roles")
 @Getter

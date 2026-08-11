@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -14,10 +15,10 @@ import java.util.Date;
 @Component
 public class TokenProvider {
 
-    @Value("{jwt.experition}")
+    @Value("${jwt.expiration}")
     private long expirationTime;
 
-    @Value("{jwt.key}")
+    @Value("${jwt.key}")
     private String key;
 
     // Gerar Token
@@ -53,7 +54,7 @@ public class TokenProvider {
     }
 
     // Extrair informações do token
-    private String getUsername(String token) {
+    public String getUsername(String token) {
         return getClaims(token).getSubject();
     }
 
