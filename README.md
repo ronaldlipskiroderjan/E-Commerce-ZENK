@@ -1,6 +1,6 @@
 # Zenk
 
-API REST para um e-commerce, desenvolvida com Java e Spring Boot. O projeto reúne a estrutura de domínio de uma loja virtual, persistência em MySQL e autenticação stateless com Spring Security e JWT.
+API REST para um e-commerce, desenvolvida com Java e Spring Boot. O projeto reúne a estrutura de domínio de uma loja virtual, persistência em PostgreSQL e autenticação stateless com Spring Security e JWT.
 
 ## Funcionalidades
 
@@ -19,7 +19,7 @@ API REST para um e-commerce, desenvolvida com Java e Spring Boot. O projeto reú
 - Spring Data JPA
 - Spring Security
 - Bean Validation
-- MySQL
+- PostgreSQL
 - JSON Web Token (JJWT)
 - Lombok
 - Maven
@@ -30,15 +30,17 @@ Antes de iniciar, instale:
 
 - JDK 21
 - Maven 3.9 ou superior
-- MySQL 8 ou superior
+- PostgreSQL 14 ou superior
 
 ## Configuração
 
 1. Crie o banco de dados:
 
 ```sql
-CREATE DATABASE Zenk_DB;
+CREATE DATABASE zenk_db;
 ```
+
+A aplicação se conecta, por padrão, a `jdbc:postgresql://localhost:5432/zenk_db`.
 
 2. Defina as variáveis de ambiente usadas pela aplicação:
 
