@@ -2,12 +2,10 @@ package br.com.e_commerce.Zenk.controller;
 
 import br.com.e_commerce.Zenk.dtos.request.PasswordUpdateRequestDTO;
 import br.com.e_commerce.Zenk.dtos.request.UpdateUsuarioRequestDTO;
-import br.com.e_commerce.Zenk.dtos.response.TokenResponseDTO;
 import br.com.e_commerce.Zenk.dtos.response.UsuarioResponseDTO;
 import br.com.e_commerce.Zenk.service.UsuarioService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -23,51 +21,57 @@ public class UsuarioController {
 
     private final UsuarioService usuarioService;
 
+    // OK
     @GetMapping("/me")
     @ResponseStatus(HttpStatus.OK)
     public UsuarioResponseDTO findMe(Authentication authentication) {
         return usuarioService.findMe(authentication);
     }
 
+    // OK
     @PutMapping("/me")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public TokenResponseDTO updateMe(@Valid @RequestBody UpdateUsuarioRequestDTO dto,
+    public void updateMe(@Valid @RequestBody UpdateUsuarioRequestDTO dto,
                                      Authentication authentication) throws Exception {
-        return usuarioService.update(dto, authentication);
+        usuarioService.update(dto, authentication);
     }
 
-    @PatchMapping("/me/senha")
+    // OK
+    @PatchMapping("/me/password")
+    @ResponseStatus(HttpStatus.OK)
+    public void updatePassword(@Valid @RequestBody PasswordUpdateRequestDTO dto,
+                                           Authentication authentication) {
+        usuarioService.updatePassword(dto, authentication);
+    }
+
+    // OK
+    @DeleteMapping("/me")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public TokenResponseDTO updatePassword(@Valid @RequestBody PasswordUpdateRequestDTO dto,
-                                           Authentication authentication) throws Exception {
-        return usuarioService.updatePassword(dto, authentication);
+    public void deleteMe(Authentication authentication) {
+        usuarioService.deleteMe(authentication);
     }
 
-    @DeleteMapping("/me/deactivate")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deactivateMe(Authentication authentication) {
-        usuarioService.deactivateMe(authentication);
-    }
-
-    @GetMapping("admin/usuarios")
+    // OK
+    @GetMapping("/admin")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ADMIN')")
-    public Page<UsuarioResponseDTO> findAll(@PageableDefault Pageable pageable) throws Exception {
+    public Page<UsuarioResponseDTO> findAll(@PageableDefault Pageable pageable) {
         return usuarioService.findAllUsers(pageable);
     }
 
-    @GetMapping("admin/usuarios/{id}")
+    // OK
+    @GetMapping("/admin/{id}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ADMIN')")
     public UsuarioResponseDTO findById(@PathVariable Integer id) throws Exception {
         return usuarioService.findById(id);
     }
 
-    @PatchMapping
+    // OK
+    @DeleteMapping("/admin/{id}/status")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ADMIN')")
-    public void deactivateUser() {
-        usuarioService.deactivateUser();
+    public void deactivateUser(@PathVariable Integer id) throws Exception{
+        usuarioService.deleteUser(id);
     }
 }
-

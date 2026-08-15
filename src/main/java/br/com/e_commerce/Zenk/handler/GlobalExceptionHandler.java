@@ -1,6 +1,7 @@
 package br.com.e_commerce.Zenk.handler;
 
 import br.com.e_commerce.Zenk.exception.NotFoundException;
+import br.com.e_commerce.Zenk.exception.UsuarioInactivateException;
 import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +42,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ExceptionDTO(
                 ex.getMessage(),
                 HttpStatus.UNAUTHORIZED.value()
+        ));
+    }
+
+    @ExceptionHandler(UsuarioInactivateException.class)
+    public ResponseEntity<ExceptionDTO> usuarioInactivateException(UsuarioInactivateException ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ExceptionDTO(
+                ex.getMessage(),
+                HttpStatus.FORBIDDEN.value()
         ));
     }
 

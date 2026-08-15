@@ -15,3 +15,11 @@ jwt:
   key: ${JWT_KEY}
 
 # Gere a sua jwt key, usando esse comando no terminal-> LC_ALL=C tr -dc 'A-Za-z0-9' </dev/urandom | head -c 344; echo
+
+app:
+  admin:
+    nome: ${ADMIN_NOME}
+    email: ${ADMIN_EMAIL}
+    password: ${ADMIN_PASSWORD}
+    cpf: ${ADMIN_CPF}
+    telefone: ${ADMIN_TELEPHONE}

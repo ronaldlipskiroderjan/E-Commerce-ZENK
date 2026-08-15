@@ -10,6 +10,8 @@ import br.com.e_commerce.Zenk.dtos.request.AuthRequestDTO;
 import br.com.e_commerce.Zenk.dtos.request.TokenRefreshRequestDTO;
 import br.com.e_commerce.Zenk.dtos.response.TokenResponseDTO;
 import br.com.e_commerce.Zenk.enums.RoleTypeEnum;
+import br.com.e_commerce.Zenk.exception.NotFoundException;
+import br.com.e_commerce.Zenk.exception.UsuarioInactivateException;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,7 +37,6 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final TokenProvider tokenProvider;
     private final UserDetailsServiceImpl userDetailsServiceImpl;
-
     @Value("${jwt.expiration}")
     private long expirationTime;
 
@@ -61,14 +62,20 @@ public class AuthService {
     }
 
     public TokenResponseDTO login(AuthLoginRequestDTO dto) throws Exception {
-        try {
-            Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(dto.email(), dto.senha()));
-            String token = tokenProvider.gerarToken(auth);
-            return new TokenResponseDTO(token, expirationTime);
-        } catch (BadCredentialsException ex) {
-            throw new BadRequestException("Credenciais Inválidas");
-        } catch (Exception ex) {
-            throw ex;
+        UsuarioEntity usuario = usuarioRepository.findByEmail(dto.email())
+                .orElseThrow(() -> new NotFoundException("Usuario não encontrado!"));
+        if (usuario.isActivate()) {
+            try {
+                Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(dto.email(), dto.senha()));
+                String token = tokenProvider.gerarToken(auth);
+                return new TokenResponseDTO(token, expirationTime);
+            } catch (BadCredentialsException ex) {
+                throw new BadRequestException("Credenciais Inválidas");
+            } catch (Exception ex) {
+                throw ex;
+            }
+        } else {
+            throw new UsuarioInactivateException("Usuário desativado, solicite reativação");
         }
     }
 

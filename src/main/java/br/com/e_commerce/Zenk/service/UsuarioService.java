@@ -5,13 +5,14 @@ import br.com.e_commerce.Zenk.database.model.RoleEntity;
 import br.com.e_commerce.Zenk.database.model.UsuarioEntity;
 import br.com.e_commerce.Zenk.database.repository.IRoleRepository;
 import br.com.e_commerce.Zenk.database.repository.IUsuarioRepository;
+import br.com.e_commerce.Zenk.dtos.request.AuthLoginRequestDTO;
 import br.com.e_commerce.Zenk.dtos.request.PasswordUpdateRequestDTO;
 import br.com.e_commerce.Zenk.dtos.request.UpdateUsuarioRequestDTO;
 import br.com.e_commerce.Zenk.dtos.response.TokenResponseDTO;
 import br.com.e_commerce.Zenk.dtos.response.UsuarioResponseDTO;
 import br.com.e_commerce.Zenk.enums.RoleTypeEnum;
 import br.com.e_commerce.Zenk.exception.NotFoundException;
-import jakarta.persistence.EnumType;
+import br.com.e_commerce.Zenk.exception.UsuarioInactivateException;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,8 +25,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.nio.file.AccessDeniedException;
 
 @Service
 @RequiredArgsConstructor
@@ -46,37 +45,30 @@ public class UsuarioService {
                 .orElseThrow(() -> new UsernameNotFoundException("Usuaŕio não encontrado!"));
     }
 
-    public TokenResponseDTO update(UpdateUsuarioRequestDTO dto, Authentication authentication) throws Exception {
+    public void update(UpdateUsuarioRequestDTO dto, Authentication authentication) throws Exception {
         UsuarioEntity usuarioEntity= usuarioRepository.findByEmail(authentication.getName())
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado!"));
         usuarioEntity.setNome(dto.nome());
-        usuarioEntity.setEmail(dto.email());
         usuarioEntity.setCpf(dto.cpf());
         usuarioEntity.setTelefone(dto.telefone());
         usuarioRepository.save(usuarioEntity);
-        return authenticate(usuarioEntity);
     }
 
-    public TokenResponseDTO updatePassword(PasswordUpdateRequestDTO dto, Authentication authentication) throws Exception {
+    public void updatePassword(PasswordUpdateRequestDTO dto, Authentication authentication) {
         UsuarioEntity usuarioEntity= usuarioRepository.findByEmail(authentication.getName())
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado!"));
         usuarioEntity.setSenha(passwordEncoder.encode(dto.senha()));
         usuarioRepository.save(usuarioEntity);
-        return authenticate(usuarioEntity);
     }
 
-    public void deactivateMe(Authentication authentication) {
+    public void deleteMe(Authentication authentication) {
         UsuarioEntity usuarioEntity = usuarioRepository.findByEmail(authentication.getName())
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado!"));
-        usuarioEntity.setActivate(false);
-        usuarioRepository.save(usuarioEntity);
+        usuarioRepository.delete(usuarioEntity);
     }
 
-    public Page<UsuarioResponseDTO> findAllUsers(Pageable pageable) throws Exception {
-        RoleEntity role = roleRepository.findByNome(RoleTypeEnum.ROLE_ADMIN.name())
-                .orElseThrow(() -> new NotFoundException("Role não encontrada"));
-        return (Page<UsuarioResponseDTO>) usuarioRepository.findAll(pageable).
-                filter(u -> u.getAuthorities().equals(role))
+    public Page<UsuarioResponseDTO> findAllUsers(Pageable pageable) {
+        return usuarioRepository.findAllByRole(RoleTypeEnum.ROLE_CLIENTE.name(), pageable)
                 .map(this::toDTO);
     }
 
@@ -86,36 +78,19 @@ public class UsuarioService {
                 .orElseThrow(() -> new BadRequestException("Usuário não encontrado para o ID " + id));
     }
 
-    public void deactivateUser(Integer id) throws Exception{
+    public void deleteUser(Integer id) throws Exception {
         UsuarioEntity usuarioEntity = usuarioRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Usuário não encontrado!"));
-        if (usuarioEntity.isActivate()) {
-            usuarioEntity.setActivate(false);
-        } else {
-            usuarioEntity.setActivate(true);
-        }
-        usuarioRepository.save(usuarioEntity);
-    }
-
-    private TokenResponseDTO authenticate(UsuarioEntity usuarioEntity) throws Exception {
-        try {
-            Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(usuarioEntity.getEmail(), usuarioEntity.getSenha()));
-            String token = tokenProvider.gerarToken(auth);
-            return new TokenResponseDTO(token, expirationTime);
-        } catch (BadCredentialsException ex) {
-            throw new BadRequestException("Credenciais Inválidas");
-        } catch (Exception ex) {
-            throw ex;
-        }
+        usuarioRepository.delete(usuarioEntity);
     }
 
     private UsuarioResponseDTO toDTO(UsuarioEntity usuarioEntity) {
         return new UsuarioResponseDTO(
+                usuarioEntity.getId(),
                 usuarioEntity.getNome(),
                 usuarioEntity.getEmail(),
                 usuarioEntity.getCpf(),
-                usuarioEntity.getTelefone(),
-                usuarioEntity.isActivate()
+                usuarioEntity.getTelefone()
         );
     }
 }

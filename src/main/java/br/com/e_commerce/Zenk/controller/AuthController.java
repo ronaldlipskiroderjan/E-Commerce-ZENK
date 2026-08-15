@@ -21,18 +21,21 @@ public class AuthController {
 
     private final AuthService authService;
 
+    // OK
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public void register(@Valid @RequestBody AuthRequestDTO dto) throws Exception {
         authService.register(dto);
     }
 
+    // OK
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public TokenResponseDTO login(@Valid @RequestBody AuthLoginRequestDTO dto) throws Exception {
         return authService.login(dto);
     }
 
+    // OK
     @PostMapping("/refresh-token")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public TokenResponseDTO refreshToken(Authentication authentication) {
