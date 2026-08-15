@@ -45,6 +45,7 @@ public class PedidoEntity {
     private PagamentoEntity pagamento;
 
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
+    @Builder.Default
     private Set<ItemPedidoEntity> itens = new HashSet<>();
 
     // ============================================================ //

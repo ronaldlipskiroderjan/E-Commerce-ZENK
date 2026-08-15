@@ -3,17 +3,23 @@ spring:
     name: Zenk
 
   datasource:
-    url: jdbc:mysql://localhost:3306/Zenk_DB
+    url: jdbc:postgresql://localhost:5432/zenk_db
     username: ${DATABASE_USERNAME}
     password: ${DATABASE_PASSWORD}
 
   jpa:
     hibernate:
       ddl-auto: create-drop
-
 jwt:
   expiration: ${JWT_EXPIRATION:900000} # 15 min
   key: ${JWT_KEY}
 
-
 # Gere a sua jwt key, usando esse comando no terminal-> LC_ALL=C tr -dc 'A-Za-z0-9' </dev/urandom | head -c 344; echo
+
+app:
+  admin:
+    nome: ${ADMIN_NOME}
+    email: ${ADMIN_EMAIL}
+    password: ${ADMIN_PASSWORD}
+    cpf: ${ADMIN_CPF}
+    telefone: ${ADMIN_TELEPHONE}
