@@ -7,20 +7,15 @@ import br.com.e_commerce.Zenk.database.repository.IRoleRepository;
 import br.com.e_commerce.Zenk.database.repository.IUsuarioRepository;
 import br.com.e_commerce.Zenk.dtos.request.AuthLoginRequestDTO;
 import br.com.e_commerce.Zenk.dtos.request.AuthRequestDTO;
-import br.com.e_commerce.Zenk.dtos.request.TokenRefreshRequestDTO;
 import br.com.e_commerce.Zenk.dtos.response.TokenResponseDTO;
 import br.com.e_commerce.Zenk.enums.RoleTypeEnum;
-import br.com.e_commerce.Zenk.exception.NotFoundException;
-import br.com.e_commerce.Zenk.exception.UsuarioInactivateException;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -56,26 +51,19 @@ public class AuthService {
                 .cpf(dto.cpf())
                 .telefone(dto.telefone())
                 .dataCadastro(LocalDateTime.now())
-                .activate(true)
                 .build()
         );
     }
 
     public TokenResponseDTO login(AuthLoginRequestDTO dto) throws Exception {
-        UsuarioEntity usuario = usuarioRepository.findByEmail(dto.email())
-                .orElseThrow(() -> new NotFoundException("Usuario não encontrado!"));
-        if (usuario.isActivate()) {
-            try {
-                Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(dto.email(), dto.senha()));
-                String token = tokenProvider.gerarToken(auth);
-                return new TokenResponseDTO(token, expirationTime);
-            } catch (BadCredentialsException ex) {
-                throw new BadRequestException("Credenciais Inválidas");
-            } catch (Exception ex) {
-                throw ex;
-            }
-        } else {
-            throw new UsuarioInactivateException("Usuário desativado, solicite reativação");
+        try {
+            Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(dto.email(), dto.senha()));
+            String token = tokenProvider.gerarToken(auth);
+            return new TokenResponseDTO(token, expirationTime);
+        } catch (BadCredentialsException ex) {
+            throw new BadRequestException("Credenciais Inválidas");
+        } catch (Exception ex) {
+            throw ex;
         }
     }
 

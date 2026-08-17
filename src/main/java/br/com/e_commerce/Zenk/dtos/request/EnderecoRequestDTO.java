@@ -1,12 +1,15 @@
 package br.com.e_commerce.Zenk.dtos.request;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 public record EnderecoRequestDTO(
-        String logradouro,
-        int numero,
+        @NotBlank String logradouro,
+        @NotNull int numero,
         String complemento,
-        String bairro,
-        String cidade,
-        String estado,
-        String cep
+        @NotBlank String bairro,
+        @NotBlank String cidade,
+        @NotBlank String estado,
+        @NotBlank String cep
 ) {
 }

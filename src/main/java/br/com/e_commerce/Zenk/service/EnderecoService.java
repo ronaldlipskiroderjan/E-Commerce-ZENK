@@ -9,7 +9,6 @@ import br.com.e_commerce.Zenk.dtos.response.EnderecoResponseDTO;
 import br.com.e_commerce.Zenk.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
-import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -48,10 +47,10 @@ public class EnderecoService {
                 .toList();
     }
 
-    public EnderecoResponseDTO findById(Authentication authentication, Integer enderecoId) throws Exception {
+    public EnderecoResponseDTO findById(Integer enderecoId, Authentication authentication) throws Exception {
         return enderecoRepository.findByIdAndUsuarioEmail(enderecoId, authentication.getName())
                 .map(this::toDTO)
-                .orElseThrow(() -> new NotFoundException("Endereço não encontrado!"));
+                .orElseThrow(() -> new NotFoundException("Usuario não encontrado!"));
     }
 
     public void update(Authentication authentication, Integer enderecoId, EnderecoRequestDTO dto) throws Exception{

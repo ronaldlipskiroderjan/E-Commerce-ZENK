@@ -44,10 +44,14 @@ public class AdminInitializer {
                     .orElseGet(() -> roleRepository.save(RoleEntity.builder()
                             .nome(RoleTypeEnum.ROLE_ADMIN.name())
                             .build()));
+            RoleEntity roleCliente = roleRepository.findByNome(RoleTypeEnum.ROLE_CLIENTE.name())
+                    .orElseGet(() -> roleRepository.save(RoleEntity.builder()
+                            .nome(RoleTypeEnum.ROLE_CLIENTE.name())
+                            .build()));
             UsuarioEntity admin = UsuarioEntity.builder()
                     .nome(adminNome)
                     .email(adminEmail)
-                    .roles(Set.of(roleAdmin))
+                    .roles(Set.of(roleAdmin, roleCliente))
                     .senha(passwordEncoder.encode(adminPassword))
                     .cpf(adminCpf)
                     .telefone(adminTelefone)
