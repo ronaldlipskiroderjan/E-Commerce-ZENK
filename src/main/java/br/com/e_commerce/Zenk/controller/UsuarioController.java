@@ -15,7 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/v1/usuario")
+@RequestMapping("/v1/usuarios")
 @RequiredArgsConstructor
 public class UsuarioController {
 
