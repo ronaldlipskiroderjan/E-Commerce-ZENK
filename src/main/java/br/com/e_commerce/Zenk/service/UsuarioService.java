@@ -1,26 +1,20 @@
 package br.com.e_commerce.Zenk.service;
 
 import br.com.e_commerce.Zenk.config.TokenProvider;
-import br.com.e_commerce.Zenk.database.model.RoleEntity;
 import br.com.e_commerce.Zenk.database.model.UsuarioEntity;
 import br.com.e_commerce.Zenk.database.repository.IRoleRepository;
 import br.com.e_commerce.Zenk.database.repository.IUsuarioRepository;
-import br.com.e_commerce.Zenk.dtos.request.AuthLoginRequestDTO;
 import br.com.e_commerce.Zenk.dtos.request.PasswordUpdateRequestDTO;
 import br.com.e_commerce.Zenk.dtos.request.UpdateUsuarioRequestDTO;
-import br.com.e_commerce.Zenk.dtos.response.TokenResponseDTO;
 import br.com.e_commerce.Zenk.dtos.response.UsuarioResponseDTO;
 import br.com.e_commerce.Zenk.enums.RoleTypeEnum;
 import br.com.e_commerce.Zenk.exception.NotFoundException;
-import br.com.e_commerce.Zenk.exception.UsuarioInactivateException;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
