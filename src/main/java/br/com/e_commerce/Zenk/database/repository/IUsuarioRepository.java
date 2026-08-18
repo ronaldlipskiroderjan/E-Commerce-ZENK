@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 
 public interface IUsuarioRepository extends JpaRepository<UsuarioEntity, Integer> {
-    boolean existsByEmail(String email);
+    boolean existsByEmailIgnoreCase(String email);
     Optional<UsuarioEntity> findByEmail(String email);
     @Query("""
         SELECT u

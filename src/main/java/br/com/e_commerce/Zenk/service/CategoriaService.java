@@ -36,7 +36,7 @@ public class CategoriaService {
     public CategoriaResponseDTO findById(Integer id) throws Exception {
         return categoriaRepository.findById(id)
                 .map(this::toDTO)
-                .orElseThrow(() -> new NotFoundException("Categoria não entregue!"));
+                .orElseThrow(() -> new NotFoundException("Categoria não encontrada!!"));
     }
 
     public void update(Integer id, CategoriaRequestDTO dto) throws Exception {

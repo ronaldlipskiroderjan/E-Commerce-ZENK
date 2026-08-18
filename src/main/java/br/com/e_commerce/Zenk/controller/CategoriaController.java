@@ -19,6 +19,7 @@ public class CategoriaController {
 
     private final CategoriaService categoriaService;
 
+    // OK
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ADMIN')")
@@ -26,18 +27,21 @@ public class CategoriaController {
         categoriaService.create(dto);
     }
 
+    // OK
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public Page<CategoriaResponseDTO> findAll(@PageableDefault Pageable pageable) {
         return categoriaService.findAll(pageable);
     }
 
+    // OK
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public CategoriaResponseDTO findById(Integer id) throws Exception {
+    public CategoriaResponseDTO findById(@PathVariable Integer id) throws Exception {
         return categoriaService.findById(id);
     }
 
+    // OK
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PreAuthorize("hasRole('ADMIN')")
@@ -45,13 +49,12 @@ public class CategoriaController {
         categoriaService.update(id, dto);
     }
 
-
+    // OK
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('ADMIN')")
     public void deleteCategoria(@PathVariable Integer id) throws Exception {
         categoriaService.delete(id);
     }
-
 
 }
