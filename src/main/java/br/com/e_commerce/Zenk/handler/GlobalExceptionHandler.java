@@ -1,5 +1,6 @@
 package br.com.e_commerce.Zenk.handler;
 
+import br.com.e_commerce.Zenk.exception.AlreadyExistsException;
 import br.com.e_commerce.Zenk.exception.NotFoundException;
 import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionDTO(
                 ex.getMessage(),
                 HttpStatus.BAD_REQUEST.value()
+        ));
+    }
+
+    @ExceptionHandler(AlreadyExistsException.class)
+    public ResponseEntity<ExceptionDTO> alreadyExistsException(AlreadyExistsException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ExceptionDTO(
+                ex.getMessage(),
+                HttpStatus.CONFLICT.value()
         ));
     }
 
