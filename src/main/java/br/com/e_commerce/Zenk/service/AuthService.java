@@ -36,7 +36,7 @@ public class AuthService {
     private long expirationTime;
 
     public void register(AuthRequestDTO dto) throws BadRequestException {
-        if (usuarioRepository.existsByEmail(dto.email())) {
+        if (usuarioRepository.existsByEmailIgnoreCase(dto.email())) {
             throw new BadRequestException("E-mail já cadastrado");
         }
         RoleEntity role = roleRepository.findByNome(RoleTypeEnum.ROLE_CLIENTE.name())
