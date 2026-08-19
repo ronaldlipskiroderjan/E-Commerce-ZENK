@@ -20,6 +20,7 @@ public class ProdutoController {
 
     private final ProdutoService produtoService;
 
+    //OK
     @PostMapping("/categorias/{categoriaId}")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ADMIN')")
@@ -28,6 +29,7 @@ public class ProdutoController {
         produtoService.createProduto(dto, categoriaId);
     }
 
+    //OK
     @GetMapping("/categorias/{categoriaId}")
     @ResponseStatus(HttpStatus.OK)
     public Page<ProdutoResponseDTO> findAllByCategoriaId(@PathVariable Integer categoriaId,
@@ -35,25 +37,29 @@ public class ProdutoController {
         return produtoService.findAllByCategoriaId(categoriaId, pageable);
     }
 
+    //OK
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public Page<ProdutoResponseCategoriaResponseDTO> findAllProdutos(@PageableDefault Pageable pageable) {
         return produtoService.findAll(pageable);
     }
 
+    //OK
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ProdutoResponseDTO findProdutoById(@PathVariable Integer id) throws Exception {
         return produtoService.findById(id);
     }
 
+    //OK
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PreAuthorize("hasRole('ADMIN')")
-    public void updateProduto (@PathVariable Integer id, ProdutoRequestDTO dto) throws Exception{
+    public void updateProduto (@PathVariable Integer id, @Valid @RequestBody ProdutoRequestDTO dto) throws Exception{
         produtoService.update(id, dto);
     }
 
+    // OK
     @PatchMapping("/{produtoId}/categorias/{categoriaId}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PreAuthorize("hasRole('ADMIN')")
@@ -61,6 +67,7 @@ public class ProdutoController {
         produtoService.updateCategoria(produtoId, categoriaId);
     }
 
+    //OK
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ADMIN')")

@@ -14,6 +14,7 @@ import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.converter.json.GsonBuilderUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -25,12 +26,7 @@ import org.springframework.stereotype.Service;
 public class UsuarioService {
 
     private final IUsuarioRepository usuarioRepository;
-    private final AuthenticationManager authenticationManager;
-    private final TokenProvider tokenProvider;
     private final PasswordEncoder passwordEncoder;
-    private final IRoleRepository roleRepository;
-    @Value("${jwt.expiration}")
-    private long expirationTime;
 
 
     public UsuarioResponseDTO findMe(Authentication authentication) {
@@ -87,4 +83,5 @@ public class UsuarioService {
                 usuarioEntity.getTelefone()
         );
     }
+
 }

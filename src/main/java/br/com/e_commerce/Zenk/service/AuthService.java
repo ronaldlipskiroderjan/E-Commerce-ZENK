@@ -44,7 +44,7 @@ public class AuthService {
                         .nome(RoleTypeEnum.ROLE_CLIENTE.name())
                         .build()));
         usuarioRepository.save(UsuarioEntity.builder()
-                .nome(dto.nome())
+                .nome(dto.nome().toLowerCase())
                 .email(dto.email())
                 .roles(Set.of(role))
                 .senha(passwordEncoder.encode(dto.senha()))
@@ -57,7 +57,7 @@ public class AuthService {
 
     public TokenResponseDTO login(AuthLoginRequestDTO dto) throws Exception {
         try {
-            Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(dto.email(), dto.senha()));
+            Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(dto.email().toLowerCase(), dto.senha()));
             String token = tokenProvider.gerarToken(auth);
             return new TokenResponseDTO(token, expirationTime);
         } catch (BadCredentialsException ex) {
