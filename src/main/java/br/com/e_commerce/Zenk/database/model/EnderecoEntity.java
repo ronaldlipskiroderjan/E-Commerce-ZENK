@@ -39,8 +39,4 @@ public class EnderecoEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "usuario_id")
     private UsuarioEntity usuario;
-
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "transportadora_id")
-    private TransportadoraEntity transportadora;
 }

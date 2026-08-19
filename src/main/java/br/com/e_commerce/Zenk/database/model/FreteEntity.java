@@ -32,10 +32,6 @@ public class FreteEntity {
     private boolean ativo;
 
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "transportadora_id")
-    private TransportadoraEntity transportadora;
-
-    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "pedido_id")
     private PedidoEntity pedido;
 }

@@ -37,7 +37,7 @@ public class AdminInitializer {
     @Bean
     CommandLineRunner criarAdminInicial() {
         return args -> {
-            if (usuarioRepository.existsByEmail(adminEmail)) {
+            if (usuarioRepository.existsByEmailIgnoreCase(adminEmail)) {
                 return;
             }
             RoleEntity roleAdmin = roleRepository.findByNome(RoleTypeEnum.ROLE_ADMIN.name())

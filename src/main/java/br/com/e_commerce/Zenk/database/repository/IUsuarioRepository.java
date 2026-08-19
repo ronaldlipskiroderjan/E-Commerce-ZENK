@@ -15,7 +15,7 @@ public interface IUsuarioRepository extends JpaRepository<UsuarioEntity, Integer
     @Query("""
         SELECT u
         FROM UsuarioEntity u
-        JOIN u.roles r 
+        JOIN u.roles r
         WHERE r.nome = :role
     """)
     Page<UsuarioEntity> findAllByRole(@Param("role") String role, Pageable pageable);
